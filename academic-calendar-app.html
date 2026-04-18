@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>AcadCal — Academic Calendar 2026–27</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0B1D3A;
+      --blue: #1A6FBF;
+      --blue2: #2484D8;
+      --sky: #E8F4FD;
+      --accent: #F4A020;
+      --green: #1A8C5B;
+      --red: #C0392B;
+      --red-lt: #FDECEA;
+      --purple: #6C3FC5;
+      --teal: #0E7490;
+      --amber: #B45309;
+      --amber-lt: #FEF3C7;
+      --gray: #F5F6FA;
+      --gray2: #E8ECF4;
+      --gray3: #BCC5D8;
+      --text: #0B1D3A;
+      --text2: #4A5878;
+      --text3: #8A96AB;
+      --white: #fff;
+      --r: 12px;
+      --rs: 8px
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--gray)
+    }
+
+    button {
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      border: none;
+      outline: none
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: 'Outfit', sans-serif;
+      outline: none;
+      border: none
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gray3);
+      border-radius: 3px
+    }
+
+    #app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden
+    }
+
+    #sidebar {
+      width: 230px;
+      min-width: 230px;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto
+    }
+
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray2);
+      padding: .85rem 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0
+    }
+
+    .tb-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .tb-sub {
+      font-size: 11.5px;
+      color: var(--text3);
+      margin-top: 1px
+    }
+
+    #content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.4rem
+    }
+
+    .sb-head {
+      padding: 1.1rem 1.1rem .7rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .sb-ico {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--blue2), var(--accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px
+    }
+
+    .sb-name {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 1rem;
+      line-height: 1
+    }
+
+    .sb-yr {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .4);
+      letter-spacing: .5px
+    }
+
+    .sb-user {
+      margin: .8rem .9rem .2rem;
+      background: rgba(255, 255, 255, .08);
+      border-radius: var(--rs);
+      padding: .6rem .8rem;
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .sb-av {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #ffd580);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--navy);
+      flex-shrink: 0
+    }
+
+    .sb-uname {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .sb-urole {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .4);
+      text-transform: uppercase;
+      letter-spacing: .4px
+    }
+
+    .sb-sec {
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .28);
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      padding: .8rem 1.1rem .25rem
+    }
+
+    .nv {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: .55rem 1.1rem;
+      cursor: pointer;
+      color: rgba(255, 255, 255, .6);
+      font-size: 13px;
+      font-weight: 500;
+      margin: 1px 7px;
+      border-radius: 7px;
+      transition: .15s;
+      user-select: none
+    }
+
+    .nv:hover {
+      background: rgba(255, 255, 255, .07);
+      color: #fff
+    }
+
+    .nv.on {
+      background: linear-gradient(90deg, var(--blue2), rgba(26, 111, 191, .55));
+      color: #fff
+    }
+
+    .cnt-badge {
+      margin-left: auto;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, .45)
+    }
+
+    .sb-foot {
+      padding: .5rem .9rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      margin-top: auto
+    }
+
+    .out-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: .55rem .8rem;
+      border-radius: 7px;
+      background: transparent;
+      color: rgba(255, 255, 255, .45);
+      font-size: 13px;
+      font-weight: 500;
+      transition: .15s;
+      cursor: pointer;
+      border: none;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .out-btn:hover {
+      background: rgba(255, 0, 0, .12);
+      color: #ff7070
+    }
+
+    #auth {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      padding: 1rem
+    }
+
+    .ac {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 2.2rem 2.2rem 1.8rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .3)
+    }
+
+    .al {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.4rem
+    }
+
+    .al-ico {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px
+    }
+
+    .al-txt {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--navy);
+      line-height: 1
+    }
+
+    .al-sub {
+      font-size: 10.5px;
+      color: var(--text3)
+    }
+
+    .a-h {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .25rem
+    }
+
+    .a-p {
+      font-size: 12.5px;
+      color: var(--text2);
+      margin-bottom: 1.3rem
+    }
+
+    .rtabs {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 1.3rem
+    }
+
+    .rtab {
+      flex: 1;
+      padding: .55rem;
+      border-radius: var(--rs);
+      border: 1.5px solid var(--gray2);
+      background: transparent;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text2);
+      transition: .2s;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .rtab.on {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy)
+    }
+
+    .fg {
+      margin-bottom: .9rem
+    }
+
+    .fl {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: .35rem;
+      letter-spacing: .3px;
+      text-transform: uppercase
+    }
+
+    .fi {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--gray2);
+      border-radius: var(--rs);
+      font-size: 13.5px;
+      color: var(--text);
+      background: #fafbff;
+      transition: .2s
+    }
+
+    .fi:focus {
+      border-color: var(--blue);
+      background: #fff
+    }
+
+    .bp {
+      width: 100%;
+      padding: .75rem;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      border-radius: var(--rs);
+      font-size: 14.5px;
+      font-weight: 600;
+      margin-top: .4rem;
+      transition: .2s;
+      cursor: pointer;
+      border: none;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .bp:hover {
+      opacity: .9
+    }
+
+    .a-sw {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 12.5px;
+      color: var(--text2)
+    }
+
+    .a-sw a {
+      color: var(--blue);
+      font-weight: 600;
+      cursor: pointer
+    }
+
+    .a-err {
+      background: var(--red-lt);
+      color: var(--red);
+      font-size: 12.5px;
+      padding: .55rem .9rem;
+      border-radius: var(--rs);
+      margin-bottom: .9rem;
+      border: 1px solid #f5c6c2
+    }
+
+    .dh {
+      font-size: 11.5px;
+      color: var(--text3);
+      margin-bottom: .5rem;
+      line-height: 1.5
+    }
+
+    .bs {
+      padding: .4rem .9rem;
+      border-radius: var(--rs);
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: .2s;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .bn {
+      background: var(--navy);
+      color: #fff;
+      border: none
+    }
+
+    .bn:hover {
+      background: var(--blue)
+    }
+
+    .bo {
+      background: transparent;
+      border: 1.5px solid var(--gray2);
+      color: var(--text2)
+    }
+
+    .bo:hover {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    .bd {
+      background: var(--red-lt);
+      color: var(--red);
+      border: 1px solid #f5c6c2
+    }
+
+    .bd:hover {
+      background: #fbd4d1
+    }
+
+    .sg {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .9rem;
+      margin-bottom: 1.3rem
+    }
+
+    .sc {
+      background: var(--white);
+      border-radius: var(--r);
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--gray2);
+      display: flex;
+      align-items: center;
+      gap: 11px
+    }
+
+    .si {
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0
+    }
+
+    .sv {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1
+    }
+
+    .sl {
+      font-size: 11.5px;
+      color: var(--text3);
+      margin-top: 2px
+    }
+
+    .rb {
+      background: #FEF9EC;
+      border: 1.5px solid var(--accent);
+      border-radius: var(--r);
+      padding: .9rem 1.1rem;
+      margin-bottom: 1.1rem
+    }
+
+    .rb h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: .5rem;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .rr {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 4px;
+      font-size: 12.5px
+    }
+
+    .rr strong {
+      color: var(--navy)
+    }
+
+    .rr span {
+      color: var(--text3)
+    }
+
+    .db {
+      margin-left: auto;
+      background: var(--amber-lt);
+      color: var(--amber);
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: .15rem .6rem;
+      border-radius: 20px;
+      white-space: nowrap
+    }
+
+    .ups {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--gray2);
+      overflow: hidden
+    }
+
+    .sh {
+      padding: .85rem 1.1rem;
+      border-bottom: 1px solid var(--gray2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .sh h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .er {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: .7rem 1.1rem;
+      border-bottom: 1px solid var(--gray2);
+      transition: .12s
+    }
+
+    .er:last-child {
+      border-bottom: none
+    }
+
+    .er:hover {
+      background: var(--gray)
+    }
+
+    .ei {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0
+    }
+
+    .en {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy)
+    }
+
+    .em {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 2px
+    }
+
+    .ep {
+      margin-left: auto;
+      background: var(--gray);
+      border-radius: 20px;
+      padding: .2rem .65rem;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text2);
+      white-space: nowrap;
+      flex-shrink: 0
+    }
+
+    .es {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text3)
+    }
+
+    .eico {
+      font-size: 2.5rem;
+      margin-bottom: .6rem
+    }
+
+    .cc {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--gray2);
+      padding: .75rem 1.1rem;
+      margin-bottom: .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .7rem
+    }
+
+    .cm {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--navy)
+    }
+
+    .cbs {
+      display: flex;
+      gap: .4rem
+    }
+
+    .cb {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      background: var(--gray);
+      border: 1px solid var(--gray2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text2);
+      transition: .15s;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .cb:hover {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy)
+    }
+
+    .qb {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap
+    }
+
+    .cg {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--gray2);
+      overflow: hidden
+    }
+
+    .cwd {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-bottom: 1px solid var(--gray2)
+    }
+
+    .cw {
+      padding: .5rem;
+      text-align: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .cdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr)
+    }
+
+    .cd {
+      min-height: 82px;
+      padding: .32rem .38rem;
+      border-right: 1px solid var(--gray2);
+      border-bottom: 1px solid var(--gray2);
+      transition: .1s;
+      cursor: pointer
+    }
+
+    .cd:nth-child(7n) {
+      border-right: none
+    }
+
+    .cd:hover {
+      background: var(--sky)
+    }
+
+    .cd.oth {
+      background: #fafafa
+    }
+
+    .cd.tod {
+      background: var(--sky)
+    }
+
+    .dn {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 2px
+    }
+
+    .cd.tod .dn {
+      background: var(--blue);
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10.5px
+    }
+
+    .cd.oth .dn {
+      color: var(--gray3)
+    }
+
+    .cec {
+      font-size: 9.5px;
+      line-height: 1.3;
+      padding: 1px 3px;
+      border-radius: 3px;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500
+    }
+
+    .cl {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: .9rem
+    }
+
+    .li {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: .2rem .6rem;
+      border-radius: 20px
+    }
+
+    .fr {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .8rem;
+      align-items: center
+    }
+
+    .fc {
+      padding: .3rem .8rem;
+      border-radius: 20px;
+      border: 1.5px solid var(--gray2);
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      cursor: pointer;
+      transition: .15s;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .fc:hover {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    .fc.on {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy)
+    }
+
+    .si2 {
+      padding: .4rem .9rem;
+      border-radius: 20px;
+      border: 1.5px solid var(--gray2);
+      background: var(--white);
+      font-size: 12.5px;
+      color: var(--text)
+    }
+
+    .si2:focus {
+      border-color: var(--blue)
+    }
+
+    .etw {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1px solid var(--gray2);
+      overflow: hidden
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th {
+      padding: .65rem .9rem;
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--gray2);
+      background: var(--gray)
+    }
+
+    td {
+      padding: .7rem .9rem;
+      border-bottom: 1px solid var(--gray2);
+      font-size: 13px;
+      vertical-align: middle
+    }
+
+    tr:last-child td {
+      border-bottom: none
+    }
+
+    tr:hover td {
+      background: var(--gray)
+    }
+
+    .cp {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: .18rem .65rem;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap
+    }
+
+    .ry {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--amber-lt);
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 600;
+      padding: .18rem .6rem;
+      border-radius: 20px
+    }
+
+    .tt {
+      font-weight: 600;
+      color: var(--navy);
+      font-size: 13px
+    }
+
+    .td2 {
+      font-size: 11.5px;
+      color: var(--text3);
+      margin-top: 2px
+    }
+
+    .td3 {
+      font-size: 12.5px
+    }
+
+    .td4 {
+      font-size: 11px;
+      color: var(--text3)
+    }
+
+    .ab {
+      display: flex;
+      gap: 5px
+    }
+
+    .ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 29, 58, .45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem
+    }
+
+    .mo {
+      background: var(--white);
+      border-radius: 15px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+      overflow: hidden;
+      max-height: 90vh;
+      overflow-y: auto
+    }
+
+    .mh {
+      padding: 1.1rem 1.3rem;
+      border-bottom: 1px solid var(--gray2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--white)
+    }
+
+    .mh h3 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .mc {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--gray);
+      color: var(--text2);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      transition: .12s
+    }
+
+    .mc:hover {
+      background: var(--gray2)
+    }
+
+    .mb {
+      padding: 1.3rem
+    }
+
+    .mf {
+      padding: .7rem 1.3rem 1.1rem;
+      display: flex;
+      gap: .6rem;
+      justify-content: flex-end
+    }
+
+    .mr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem
+    }
+
+    .mok {
+      padding: .55rem 1.3rem;
+      border-radius: 7px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: .15s;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .mok:hover {
+      background: var(--blue)
+    }
+
+    .mca {
+      padding: .55rem 1.1rem;
+      border-radius: 7px;
+      background: var(--gray);
+      color: var(--text2);
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: .15s;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .mca:hover {
+      background: var(--gray2)
+    }
+
+    .mde {
+      padding: .55rem 1.3rem;
+      border-radius: 7px;
+      background: var(--red);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: .15s;
+      font-family: 'Outfit', sans-serif
+    }
+
+    .cbr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text2);
+      cursor: pointer
+    }
+
+    .cbr input {
+      width: 15px;
+      height: 15px;
+      cursor: pointer
+    }
+
+    #toast {
+      position: fixed;
+      top: 1.1rem;
+      right: 1.1rem;
+      background: var(--navy);
+      color: #fff;
+      padding: .65rem 1.1rem;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+      z-index: 2000;
+      display: none
+    }
+
+    @media(max-width:700px) {
+      #sidebar {
+        display: none
+      }
+
+      .sg {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .mr {
+        grid-template-columns: 1fr
+      }
+
+      th:nth-child(3),
+      td:nth-child(3),
+      th:nth-child(4),
+      td:nth-child(4) {
+        display: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="auth">
+    <div class="ac">
+      <div class="al">
+        <div class="al-ico">AC</div>
+        <div>
+          <div class="al-txt">AcadCal</div>
+          <div class="al-sub">SRIT · 2026–2027</div>
+        </div>
+      </div>
+      <div class="a-h" id="ah">Welcome back</div>
+      <div class="a-p" id="ap">Sign in to your college calendar</div>
+      <div class="rtabs">
+        <button class="rtab on" onclick="setRole('student')" id="ts">👨‍🎓 Student</button>
+        <button class="rtab" onclick="setRole('admin')" id="ta">🛡️ Admin</button>
+      </div>
+      <div id="aerr" class="a-err" style="display:none"></div>
+      <div id="fn" class="fg" style="display:none"><label class="fl">Full Name</label><input class="fi" id="iname"
+          placeholder="Your full name" /></div>
+      <div class="fg"><label class="fl">Email Address</label><input class="fi" id="iemail" type="email"
+          placeholder="you@srit.edu" /></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" id="ipwd" type="password"
+          placeholder="••••••••" onkeydown="if(event.key==='Enter')doAuth()" /></div>
+      <div class="dh" id="dh">Demo → <strong>admin@srit.edu</strong> / admin123 &nbsp;|&nbsp;
+        <strong>student@srit.edu</strong> / student123
+      </div>
+      <button class="bp" onclick="doAuth()" id="abtn">Sign In</button>
+      <div class="a-sw" id="asw">Don't have an account? <a onclick="toggleMode()">Register</a></div>
+    </div>
+  </div>
+
+  <div id="app" style="display:none">
+    <aside id="sidebar">
+      <div class="sb-head">
+        <div class="sb-logo">
+          <div class="sb-ico">AC</div>
+          <div>
+            <div class="sb-name">AcadCal</div>
+            <div class="sb-yr">2026–2027</div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-user">
+        <div class="sb-av" id="sav">A</div>
+        <div>
+          <div class="sb-uname" id="sun">User</div>
+          <div class="sb-urole" id="sur">Student</div>
+        </div>
+      </div>
+      <div style="flex:1;padding:.3rem 0">
+        <div class="sb-sec">Navigation</div>
+        <div class="nv on" onclick="go('dashboard')" id="nd"><span style="font-size:14px">⊞</span> Dashboard</div>
+        <div class="nv" onclick="go('calendar')" id="nc"><span style="font-size:14px">📅</span> Calendar</div>
+        <div class="nv" onclick="go('events')" id="ne"><span style="font-size:14px">📋</span> All Events</div>
+        <div class="nv" id="na" style="display:none" onclick="go('admin')"><span style="font-size:14px">⚙</span> Manage
+          Events</div>
+        <div class="sb-sec" style="margin-top:.4rem">Categories</div>
+        <div id="sbcats"></div>
+      </div>
+      <div class="sb-foot"><button class="out-btn" onclick="doLogout()"><span>⏻</span><span>Sign Out</span></button>
+      </div>
+    </aside>
+    <div id="main">
+      <div class="topbar">
+        <div>
+          <div class="tb-title" id="tbt">Dashboard</div>
+          <div class="tb-sub">Sri Ramakrishna Institute of Technology · AY 2026–27</div>
+        </div>
+        <div id="tba"></div>
+      </div>
+      <div id="content"></div>
+    </div>
+  </div>
+
+  <div class="ov" id="modal" style="display:none" onclick="if(event.target===this)closeMod()">
+    <div class="mo" id="mbox"></div>
+  </div>
+  <div id="toast"></div>
+
+  <script>
+    const CATS = [
+      { id: 'exam', lbl: 'Internal Exam', col: '#1A6FBF', bg: '#E8F4FD', ico: '📝' },
+      { id: 'univ', lbl: 'University Exam', col: '#6C3FC5', bg: '#F0EBFF', ico: '🎓' },
+      { id: 'assignment', lbl: 'Assignment', col: '#B45309', bg: '#FEF3C7', ico: '📋' },
+      { id: 'workshop', lbl: 'Workshop/Seminar', col: '#0E7490', bg: '#E0F2F8', ico: '🔬' },
+      { id: 'technical', lbl: 'Technical Event', col: '#1A8C5B', bg: '#E6F7EF', ico: '💻' },
+      { id: 'cultural', lbl: 'Cultural/Sports', col: '#D85A30', bg: '#FAECE7', ico: '🎭' },
+      { id: 'holiday', lbl: 'Holiday', col: '#C0392B', bg: '#FDECEA', ico: '🏖️' },
+      { id: 'placement', lbl: 'Placement/Training', col: '#0B6E4F', bg: '#E6F7F1', ico: '🏢' },
+    ];
+    const CM = {}; CATS.forEach(c => CM[c.id] = c);
+    const SEED = [
+      { id: 'e1', title: 'Freshers Orientation Programme', date: '2026-07-01', end: '2026-07-05', cat: 'workshop', desc: 'Orientation and induction for newly admitted students.', rem: false },
+      { id: 'e2', title: 'Classes Commence — Odd Semester', date: '2026-07-07', end: '', cat: 'exam', desc: 'Regular academic classes begin for all years.', rem: true },
+      { id: 'e3', title: 'Aptitude & Communication Training', date: '2026-07-10', end: '2026-07-31', cat: 'placement', desc: 'Batch 1 (Final Year) aptitude and soft skills training.', rem: false },
+      { id: 'e4', title: 'Guest Lecture: Industry 4.0', date: '2026-07-22', end: '', cat: 'workshop', desc: 'Expert session on future of engineering.', rem: false },
+      { id: 'e5', title: 'Assignment 1 Distributed', date: '2026-07-14', end: '', cat: 'assignment', desc: 'Assignment 1 issued to all students.', rem: false },
+      { id: 'e6', title: 'Independence Day', date: '2026-08-15', end: '', cat: 'holiday', desc: 'National Holiday.', rem: false },
+      { id: 'e7', title: 'CIA – 1 (Odd Semester)', date: '2026-08-10', end: '2026-08-15', cat: 'exam', desc: 'Continuous Internal Assessment 1.', rem: true },
+      { id: 'e8', title: 'Assignment 1 Submission Deadline', date: '2026-08-17', end: '', cat: 'assignment', desc: 'Last date to submit Assignment 1.', rem: true },
+      { id: 'e9', title: 'Workshop: Python for Data Science', date: '2026-08-20', end: '2026-08-21', cat: 'technical', desc: '2-day hands-on workshop.', rem: false },
+      { id: 'e10', title: 'TechSphere 2026 — National Symposium', date: '2026-09-05', end: '2026-09-06', cat: 'technical', desc: 'CSE national-level technical symposium.', rem: false },
+      { id: 'e11', title: 'CIA – 2 (Odd Semester)', date: '2026-09-14', end: '2026-09-19', cat: 'exam', desc: 'Continuous Internal Assessment 2.', rem: true },
+      { id: 'e12', title: "Engineer's Day Celebration", date: '2026-09-15', end: '', cat: 'cultural', desc: 'Inter-department competitions and events.', rem: false },
+      { id: 'e13', title: 'On-Campus Placement Drive – Batch 1', date: '2026-09-22', end: '2026-09-25', cat: 'placement', desc: 'IT and Core company campus recruitment.', rem: true },
+      { id: 'e14', title: 'Gandhi Jayanthi', date: '2026-10-02', end: '', cat: 'holiday', desc: 'National Holiday.', rem: false },
+      { id: 'e15', title: 'Hackathon: Code Storm 2026', date: '2026-10-10', end: '2026-10-11', cat: 'technical', desc: '24-hour inter-college hackathon.', rem: false },
+      { id: 'e16', title: 'Annual Sports Day', date: '2026-10-17', end: '2026-10-18', cat: 'cultural', desc: 'Athletic meet and inter-department sports.', rem: false },
+      { id: 'e17', title: 'Model Examinations (Odd Semester)', date: '2026-10-26', end: '2026-11-06', cat: 'exam', desc: 'Pre-university model exams.', rem: true },
+      { id: 'e18', title: 'Annual Cultural Fest — Kaleidoscope', date: '2026-11-14', end: '2026-11-16', cat: 'cultural', desc: 'Annual cultural extravaganza.', rem: false },
+      { id: 'e19', title: 'University Odd Semester Exams Begin', date: '2026-11-28', end: '2026-12-20', cat: 'univ', desc: 'Anna University end-semester examinations.', rem: true },
+      { id: 'e20', title: 'Christmas Holiday', date: '2026-12-25', end: '', cat: 'holiday', desc: 'Public Holiday.', rem: false },
+      { id: 'e21', title: 'Winter Vacation', date: '2026-12-21', end: '2027-01-03', cat: 'holiday', desc: 'Winter recess.', rem: false },
+      { id: 'e22', title: 'Even Semester Commences', date: '2027-01-04', end: '', cat: 'exam', desc: 'Even semester classes begin.', rem: true },
+      { id: 'e23', title: 'Pongal Holiday', date: '2027-01-14', end: '2027-01-16', cat: 'holiday', desc: 'Pongal festival holidays.', rem: false },
+      { id: 'e24', title: 'Republic Day', date: '2027-01-26', end: '', cat: 'holiday', desc: 'National Holiday.', rem: false },
+      { id: 'e25', title: 'CIA – 1 (Even Semester)', date: '2027-02-09', end: '2027-02-14', cat: 'exam', desc: 'Continuous Internal Assessment 1.', rem: true },
+      { id: 'e26', title: 'Internship Fair 2027', date: '2027-02-20', end: '', cat: 'placement', desc: 'Industry connect and internship fair.', rem: false },
+      { id: 'e27', title: 'CIA – 2 (Even Semester)', date: '2027-03-08', end: '2027-03-13', cat: 'exam', desc: 'Continuous Internal Assessment 2.', rem: true },
+      { id: 'e28', title: "Women's Day Celebration", date: '2027-03-08', end: '', cat: 'cultural', desc: 'Special event and award ceremony.', rem: false },
+      { id: 'e29', title: 'Innovate 2027 — National Symposium', date: '2027-03-19', end: '2027-03-20', cat: 'technical', desc: 'Multidisciplinary national-level symposium.', rem: false },
+      { id: 'e30', title: 'Model Examinations (Even Semester)', date: '2027-04-07', end: '2027-04-18', cat: 'exam', desc: 'Pre-university model exams.', rem: true },
+      { id: 'e31', title: 'Tamil New Year Holiday', date: '2027-04-14', end: '', cat: 'holiday', desc: 'Public Holiday.', rem: false },
+      { id: 'e32', title: 'Annual Prize Distribution & College Day', date: '2027-04-25', end: '', cat: 'cultural', desc: 'Annual college day and prize distribution.', rem: false },
+      { id: 'e33', title: 'University Even Semester Exams Begin', date: '2027-04-28', end: '2027-05-24', cat: 'univ', desc: 'Anna University end-semester examinations.', rem: true },
+      { id: 'e34', title: 'Labour Day Holiday', date: '2027-05-01', end: '', cat: 'holiday', desc: 'National Holiday.', rem: false },
+      { id: 'e35', title: 'Summer Vacation', date: '2027-05-25', end: '2027-06-30', cat: 'holiday', desc: 'Summer recess.', rem: false },
+    ];
+    const USERS = [
+      { id: 'u1', name: 'Dr. Admin Singh', email: 'admin@srit.edu', pw: 'admin123', role: 'admin' },
+      { id: 'u2', name: 'Priya Krishnan', email: 'student@srit.edu', pw: 'student123', role: 'student' },
+    ];
+    const MN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const API_CANDIDATES = [
+      (location.protocol === 'http:' || location.protocol === 'https:') ? `${location.origin}/api` : null,
+      'http://localhost:3000/api'
+    ].filter(Boolean);
+    let API_BASE = localStorage.getItem('ac_api_base') || API_CANDIDATES[0];
+    let U = null, TK = null, EVS = [], MAIL_STATE = { configured: false, from: null, appBaseUrl: null, reminderCount: 0 }, VIEW = 'dashboard', CY = 2026, CM2 = 6, CF = 'all', MF = 'all', SQ = '', AM = 'login', AR = 'student';
+    function lu() { try { const s = localStorage.getItem('ac_u4'); return s ? JSON.parse(s) : null; } catch { return null; } }
+    function lt() { try { return localStorage.getItem('ac_t4') || null; } catch { return null; } }
+    function su(u, t) {
+      if (u && t) { localStorage.setItem('ac_u4', JSON.stringify(u)); localStorage.setItem('ac_t4', t); }
+      else { localStorage.removeItem('ac_u4'); localStorage.removeItem('ac_t4'); }
+    }
+    async function api(p, o = {}) {
+      const h = { 'Content-Type': 'application/json', ...(o.headers || {}) };
+      if (TK) h.Authorization = `Bearer ${TK}`;
+      const bases = [API_BASE, ...API_CANDIDATES.filter(b => b !== API_BASE)];
+      let lastErr = new Error('Unable to reach backend API.');
+
+      for (const base of bases) {
+        try {
+          const r = await fetch(base + p, { ...o, headers: h });
+          if (r.status === 204) { API_BASE = base; localStorage.setItem('ac_api_base', base); return null; }
+          const j = await r.json().catch(() => ({}));
+
+          if (r.ok) {
+            API_BASE = base;
+            localStorage.setItem('ac_api_base', base);
+            return j;
+          }
+
+          const msg = j.message || `${r.status} ${r.statusText}`;
+          if ((r.status === 404 || r.status === 405) && base !== API_CANDIDATES[API_CANDIDATES.length - 1]) { lastErr = new Error(msg); continue; }
+          throw new Error(msg);
+        } catch (err) {
+          lastErr = err;
+          if (base === API_CANDIDATES[API_CANDIDATES.length - 1]) throw err;
+        }
+      }
+
+      throw lastErr;
+    }
+    async function loadEvents() { EVS = await api('/events'); }
+    async function loadMailState() {
+      try { MAIL_STATE = await api('/notifications/status'); }
+      catch { MAIL_STATE = { configured: false, from: null, appBaseUrl: null, reminderCount: 0 }; }
+    }
+    function fd(d) { if (!d) return ''; const t = new Date(d + 'T00:00:00'); return t.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+    function du(d) { const t = new Date(); t.setHours(0, 0, 0, 0); return Math.ceil((new Date(d + 'T00:00:00') - t) / 86400000); }
+    function soon(d) { const u = du(d); return u >= 0 && u <= 14; }
+    function x(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function p2(n) { return String(n).padStart(2, '0'); }
+    function ds(y, m, d) { return `${y}-${p2(m + 1)}-${p2(d)}`; }
+    let tT;
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(tT); tT = setTimeout(() => t.style.display = 'none', 3000); }
+    function setRole(r) { AR = r; document.getElementById('ts').className = 'rtab' + (r === 'student' ? ' on' : ''); document.getElementById('ta').className = 'rtab' + (r === 'admin' ? ' on' : ''); }
+    function toggleMode() {
+      AM = AM === 'login' ? 'register' : 'login'; const r = AM === 'register';
+      document.getElementById('ah').textContent = r ? 'Create account' : 'Welcome back';
+      document.getElementById('ap').textContent = r ? 'Register as Admin or Student' : 'Sign in to your college calendar';
+      document.getElementById('fn').style.display = r ? 'block' : 'none';
+      document.getElementById('dh').style.display = r ? 'none' : 'block';
+      document.getElementById('abtn').textContent = r ? 'Create Account' : 'Sign In';
+      document.getElementById('asw').innerHTML = r ? 'Already have an account? <a onclick="toggleMode()">Sign In</a>' : "Don't have an account? <a onclick=\"toggleMode()\">Register</a>";
+      document.getElementById('aerr').style.display = 'none';
+    }
+    function shErr(m) { const e = document.getElementById('aerr'); e.textContent = m; e.style.display = 'block'; }
+    async function doAuth() {
+      const em = document.getElementById('iemail').value.trim(), pw = document.getElementById('ipwd').value;
+      document.getElementById('aerr').style.display = 'none';
+      try {
+        if (AM === 'login') {
+          const rs = await api('/auth/login', { method: 'POST', body: JSON.stringify({ email: em, password: pw }) });
+          await loginAs(rs.user, rs.token);
+        } else {
+          const nm = document.getElementById('iname').value.trim();
+          if (!nm || !em || !pw) { shErr('Please fill all fields.'); return; }
+          if (pw.length < 6) { shErr('Password must be at least 6 chars.'); return; }
+          const rs = await api('/auth/register', { method: 'POST', body: JSON.stringify({ name: nm, email: em, password: pw, role: AR }) });
+          await loginAs(rs.user, rs.token);
+        }
+      } catch (err) {
+        shErr((err && err.message ? err.message : 'Unable to authenticate.') + ' Start backend with: npm start');
+      }
+    }
+    async function loginAs(u, t) { U = u; TK = t; su(u, t); await Promise.all([loadEvents(), loadMailState()]); document.getElementById('auth').style.display = 'none'; document.getElementById('app').style.display = 'flex'; initApp(); }
+    function doLogout() { su(null); U = null; TK = null; EVS = []; document.getElementById('na').style.display = 'none'; document.getElementById('app').style.display = 'none'; document.getElementById('auth').style.display = 'flex'; document.getElementById('iemail').value = ''; document.getElementById('ipwd').value = ''; }
+    function initApp() {
+      document.getElementById('sav').textContent = U.name[0]; document.getElementById('sun').textContent = U.name; document.getElementById('sur').textContent = U.role;
+      document.getElementById('na').style.display = U.role === 'admin' ? 'flex' : 'none';
+      rSbCats(); go('dashboard');
+    }
+    function rSbCats() {
+      document.getElementById('sbcats').innerHTML = CATS.map(c => {
+        const cnt = EVS.filter(e => e.cat === c.id).length;
+        return `<div class="nv" onclick="catJump('${c.id}')" style="font-size:12.5px"><span style="font-size:13px">${c.ico}</span><span style="color:rgba(255,255,255,.5)">${c.lbl}</span><span class="cnt-badge">${cnt}</span></div>`;
+      }).join('');
+    }
+    function catJump(c) { CF = c; go('events'); }
+    function go(v) {
+      VIEW = v;
+      ['dashboard', 'calendar', 'events', 'admin'].forEach(id => { const el = document.getElementById('n' + id[0]); if (el) el.className = 'nv' + (id === v ? ' on' : ''); });
+      const T = { dashboard: 'Dashboard', calendar: 'Calendar View', events: 'All Events', admin: 'Manage Events' };
+      document.getElementById('tbt').textContent = T[v] || v;
+      const ta = document.getElementById('tba'); ta.innerHTML = '';
+      if (U.role === 'admin') {
+        const actions = [];
+        if (v === 'dashboard' || v === 'events' || v === 'admin') actions.push(`<button class="bs bo" onclick="openNotify()" title="Send a custom email notification to all users">Send Notification</button>`);
+        if (v === 'dashboard' || v === 'events' || v === 'admin') actions.push(`<button class="bs bo" onclick="runReminders()" title="Send EmailJS reminders for reminder-enabled events happening today or tomorrow">Send Reminders</button>`);
+        if (v === 'events' || v === 'admin') actions.push(`<button class="bs bn" onclick="openAdd()">+ Add Event</button>`);
+        ta.innerHTML = actions.join(' ');
+      }
+      const c = document.getElementById('content');
+      if (v === 'dashboard') c.innerHTML = rDash();
+      else if (v === 'calendar') c.innerHTML = rCal();
+      else c.innerHTML = rEvs();
+    }
+    function rDash() {
+      const up = EVS.filter(e => du(e.date) >= 0).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 8);
+      const rem = EVS.filter(e => e.rem && soon(e.date) && du(e.date) >= 0);
+      const ec = EVS.filter(e => e.cat === 'exam' || e.cat === 'univ').length;
+      const hc = EVS.filter(e => e.cat === 'holiday').length;
+      let h = `<div class="sg">
+    <div class="sc"><div class="si" style="background:#E8F4FD">📅</div><div><div class="sv">${EVS.length}</div><div class="sl">Total Events</div></div></div>
+    <div class="sc"><div class="si" style="background:#E6F7EF">📝</div><div><div class="sv">${ec}</div><div class="sl">Examinations</div></div></div>
+    <div class="sc"><div class="si" style="background:#FDECEA">🏖️</div><div><div class="sv">${hc}</div><div class="sl">Holidays</div></div></div>
+    <div class="sc"><div class="si" style="background:#FEF3C7">🔔</div><div><div class="sv">${rem.length}</div><div class="sl">Reminders Soon</div></div></div>
+  </div>`;
+      if (U.role === 'admin') {
+        h += `<div class="rb" style="background:${MAIL_STATE.configured ? '#EAF7F0' : '#FFF4E5'};border-color:${MAIL_STATE.configured ? '#7BC79B' : '#F4A020'}">
+      <h4>${MAIL_STATE.configured ? '✉️ EmailJS notifications are active' : '⚠️ EmailJS notifications are not configured'}</h4>
+      <div class="rr"><strong>Status</strong><span>${MAIL_STATE.configured ? `Mail will be sent via EmailJS REST API.` : 'Add EmailJS configuration to `.env` so event updates and reminders can be emailed.'}</span></div>
+      <div class="rr"><strong>Reminder log</strong><span>${MAIL_STATE.reminderCount || 0} reminder email(s) have been recorded.</span></div>
+    </div>`;
+      }
+      if (rem.length) {
+        h += `<div class="rb"><h4>🔔 Upcoming Reminders</h4>`;
+        rem.forEach(e => { const d = du(e.date), l = d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : `${d} days`; h += `<div class="rr"><strong>${x(e.title)}</strong><span>— ${fd(e.date)}</span><span class="db">${l}</span></div>`; });
+        h += `</div>`;
+      }
+      h += `<div class="ups"><div class="sh"><h3>Upcoming Events</h3><button class="bs bo" onclick="go('events')">View All</button></div>`;
+      if (!up.length) h += `<div class="es"><div class="eico">📭</div><p>No upcoming events.</p></div>`;
+      up.forEach(e => {
+        const c = CM[e.cat] || { ico: '📌', bg: '#eee', col: '#888', lbl: 'Other' }; const d = du(e.date); const p = d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : d < 0 ? `${Math.abs(d)}d ago` : `${d} days`;
+        h += `<div class="er"><div class="ei" style="background:${c.bg}">${c.ico}</div><div style="flex:1;min-width:0"><div class="en">${x(e.title)}</div><div class="em">${fd(e.date)}${e.end && e.end !== e.date ? ' → ' + fd(e.end) : ''} · ${c.lbl}</div></div>${e.rem ? '<span class="ry">🔔</span>' : ''}<div class="ep">${p}</div></div>`;
+      });
+      h += `</div>`; return h;
+    }
+    function rCal() {
+      const qs = [{ y: 2026, m: 6, l: "Jul '26" }, { y: 2026, m: 10, l: "Nov '26" }, { y: 2027, m: 0, l: "Jan '27" }, { y: 2027, m: 3, l: "Apr '27" }];
+      let h = `<div class="cc"><div style="display:flex;align-items:center;gap:10px">
+    <div class="cbs"><button class="cb" onclick="cNav(-1)">‹</button></div>
+    <span class="cm">${MN[CM2]} ${CY}</span>
+    <div class="cbs"><button class="cb" onclick="cNav(1)">›</button></div>
+  </div><div class="qb">${qs.map(q => `<button class="fc${CY === q.y && CM2 === q.m ? ' on' : ''}" onclick="cGo(${q.y},${q.m})">${q.l}</button>`).join('')}</div></div>`;
+      h += `<div class="cg"><div class="cwd">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<div class="cw">${d}</div>`).join('')}</div><div class="cdays">`;
+      const fd1 = new Date(CY, CM2, 1).getDay(), dim = new Date(CY, CM2 + 1, 0).getDate(), pdim = new Date(CY, CM2, 0).getDate();
+      const tod = new Date(), cells = [];
+      for (let i = fd1 - 1; i >= 0; i--) { const m = CM2 === 0 ? 11 : CM2 - 1, y = CM2 === 0 ? CY - 1 : CY; cells.push({ d: pdim - i, m, y, cur: false }); }
+      for (let d = 1; d <= dim; d++)cells.push({ d, m: CM2, y: CY, cur: true });
+      while (cells.length % 7 !== 0) { const n = cells.length - dim - fd1 + 1, m = CM2 === 11 ? 0 : CM2 + 1, y = CM2 === 11 ? CY + 1 : CY; cells.push({ d: n, m, y, cur: false }); }
+      cells.forEach(cell => {
+        const s = ds(cell.y, cell.m, cell.d);
+        const ev = EVS.filter(e => e.date === s || (e.end && e.date <= s && e.end >= s));
+        const isT = cell.cur && tod.getFullYear() === cell.y && tod.getMonth() === cell.m && tod.getDate() === cell.d;
+        h += `<div class="cd${!cell.cur ? ' oth' : ''}${isT ? ' tod' : ''}"><div class="dn">${cell.d}</div>`;
+        ev.slice(0, 3).forEach(e => { const c = CM[e.cat] || { bg: '#eee', col: '#888' }; const nm = e.title.length > 13 ? e.title.slice(0, 11) + '…' : e.title; h += `<div class="cec" style="background:${c.bg};color:${c.col}" title="${x(e.title)}">${nm}</div>`; });
+        if (ev.length > 3) h += `<div style="font-size:9px;color:var(--text3);margin-top:1px">+${ev.length - 3}</div>`;
+        h += `</div>`;
+      });
+      h += `</div></div><div class="cl">${CATS.map(c => `<span class="li" style="background:${c.bg};color:${c.col}">${c.ico} ${c.lbl}</span>`).join('')}</div>`;
+      return h;
+    }
+    function cNav(d) { CM2 += d; if (CM2 > 11) { CM2 = 0; CY++; } if (CM2 < 0) { CM2 = 11; CY--; } document.getElementById('content').innerHTML = rCal(); }
+    function cGo(y, m) { CY = y; CM2 = m; document.getElementById('content').innerHTML = rCal(); }
+    function rEvs() {
+      const MK = ['2026-07', '2026-08', '2026-09', '2026-10', '2026-11', '2026-12', '2027-01', '2027-02', '2027-03', '2027-04', '2027-05', '2027-06'];
+      const ML = { "2026-07": "Jul'26", "2026-08": "Aug'26", "2026-09": "Sep'26", "2026-10": "Oct'26", "2026-11": "Nov'26", "2026-12": "Dec'26", "2027-01": "Jan'27", "2027-02": "Feb'27", "2027-03": "Mar'27", "2027-04": "Apr'27", "2027-05": "May'27", "2027-06": "Jun'27" };
+      const fi = EVS.filter(e => {
+        if (CF !== 'all' && e.cat !== CF) return false;
+        if (MF !== 'all' && !e.date.startsWith(MF)) return false;
+        if (SQ && !e.title.toLowerCase().includes(SQ.toLowerCase()) && !(e.desc || '').toLowerCase().includes(SQ.toLowerCase())) return false;
+        return true;
+      }).sort((a, b) => a.date.localeCompare(b.date));
+      const ia = U.role === 'admin';
+      let h = `<div class="fr"><input class="si2" id="esrch" placeholder="🔍 Search events..." value="${x(SQ)}" oninput="doSearch(this.value)"/>
+    <button class="fc${CF === 'all' ? ' on' : ''}" onclick="doCat('all')">All</button>
+    ${CATS.map(c => `<button class="fc${CF === c.id ? ' on' : ''}" onclick="doCat('${c.id}')">${c.ico} ${c.lbl}</button>`).join('')}
+  </div>
+  <div class="fr"><span style="font-size:11.5px;color:var(--text3);font-weight:600">Month:</span>
+    <button class="fc${MF === 'all' ? ' on' : ''}" onclick="doMonth('all')">All</button>
+    ${MK.map(m => `<button class="fc${MF === m ? ' on' : ''}" onclick="doMonth('${m}')">${ML[m]}</button>`).join('')}
+  </div>
+  <div class="etw">`;
+      if (!fi.length) { h += `<div class="es"><div class="eico">🔍</div><p>No events match your filters.</p></div>`; }
+      else {
+        h += `<table><thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Reminder</th>${ia ? '<th>Actions</th>' : ''}</tr></thead><tbody>`;
+        fi.forEach(e => {
+          const c = CM[e.cat] || { bg: '#eee', col: '#888', ico: '📌', lbl: 'Other' };
+          h += `<tr><td><div class="tt">${x(e.title)}</div>${e.desc ? `<div class="td2">${x(e.desc)}</div>` : ''}</td>
+        <td><div class="td3">${fd(e.date)}</div>${e.end && e.end !== e.date ? `<div class="td4">to ${fd(e.end)}</div>` : ''}</td>
+        <td><span class="cp" style="background:${c.bg};color:${c.col}">${c.ico} ${c.lbl}</span></td>
+        <td>${e.rem ? '<span class="ry">🔔 Yes</span>' : '<span style="color:var(--text3);font-size:12px">—</span>'}</td>
+        ${ia ? `<td><div class="ab"><button class="bs bo" onclick="openEdit('${e.id}')" style="font-size:12px;padding:.28rem .6rem">Edit</button><button class="bs bd" onclick="openDel('${e.id}')" style="font-size:12px;padding:.28rem .6rem">Delete</button></div></td>` : ''}
+      </tr>`;
+        });
+        h += `</tbody></table>`;
+      }
+      h += `</div>`; return h;
+    }
+    function doSearch(v) { SQ = v; document.getElementById('content').innerHTML = rEvs(); }
+    function doCat(v) { CF = v; document.getElementById('content').innerHTML = rEvs(); }
+    function doMonth(v) { MF = v; document.getElementById('content').innerHTML = rEvs(); }
+    function buildForm(e) {
+      const ie = !!e;
+      const co = CATS.map(c => `<option value="${c.id}"${e && e.cat === c.id ? ' selected' : ''}>${c.ico} ${c.lbl}</option>`).join('');
+      return `<div class="mh"><h3>${ie ? 'Edit Event' : 'Add New Event'}</h3><button class="mc" onclick="closeMod()">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Event Title *</label><input class="fi" id="mft" value="${ie ? x(e.title) : ''}" placeholder="e.g. CIA-1 Examination"/></div>
+    <div class="mr">
+      <div class="fg"><label class="fl">Start Date *</label><input class="fi" id="mfd" type="date" value="${ie ? e.date : ''}"/></div>
+      <div class="fg"><label class="fl">End Date</label><input class="fi" id="mfe" type="date" value="${ie ? e.end : ''}"/></div>
+    </div>
+    <div class="fg"><label class="fl">Category *</label><select class="fi" id="mfc">${co}</select></div>
+    <div class="fg"><label class="fl">Description</label><textarea class="fi" id="mfdes" rows="3" style="resize:vertical">${ie ? x(e.desc) : ''}</textarea></div>
+    <label class="cbr"><input type="checkbox" id="mfr" ${ie && e.rem ? 'checked' : ''}/> Set reminder for this event</label>
+  </div>
+  <div class="mf"><button class="mca" onclick="closeMod()">Cancel</button><button class="mok" onclick="saveEv('${ie ? e.id : ''}')">${ie ? 'Save Changes' : 'Add Event'}</button></div>`;
+    }
+    function openAdd() { document.getElementById('mbox').innerHTML = buildForm(null); document.getElementById('modal').style.display = 'flex'; }
+    function openEdit(id) { const e = EVS.find(ev => ev.id === id); if (!e) return; document.getElementById('mbox').innerHTML = buildForm(e); document.getElementById('modal').style.display = 'flex'; }
+    function openDel(id) {
+      const e = EVS.find(ev => ev.id === id); if (!e) return;
+      document.getElementById('mbox').innerHTML = `<div class="mh"><h3>Delete Event</h3><button class="mc" onclick="closeMod()">✕</button></div>
+  <div class="mb"><p style="font-size:13.5px;color:var(--text2);line-height:1.6">Delete <strong style="color:var(--navy)">${x(e.title)}</strong>? This cannot be undone.</p></div>
+  <div class="mf"><button class="mca" onclick="closeMod()">Cancel</button><button class="mde" onclick="confDel('${id}')">Delete</button></div>`;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    async function saveEv(eid) {
+      const t = document.getElementById('mft').value.trim(), d = document.getElementById('mfd').value;
+      if (!t || !d) { toast('⚠️ Title and Start Date required.'); return; }
+      const ev = { title: t, date: d, end: document.getElementById('mfe').value, cat: document.getElementById('mfc').value, desc: document.getElementById('mfdes').value.trim(), rem: document.getElementById('mfr').checked };
+      try {
+        if (eid) await api('/events/' + eid, { method: 'PUT', body: JSON.stringify(ev) });
+        else await api('/events', { method: 'POST', body: JSON.stringify(ev) });
+        await Promise.all([loadEvents(), loadMailState()]);
+        rSbCats(); closeMod(); toast(eid ? '✅ Event updated!' : '✅ Event added!'); go(VIEW);
+      } catch (err) {
+        toast('❌ ' + (err.message || 'Unable to save event.'));
+      }
+    }
+    async function confDel(id) {
+      try {
+        await api('/events/' + id, { method: 'DELETE' });
+        await Promise.all([loadEvents(), loadMailState()]);
+        rSbCats(); closeMod(); toast('🗑️ Event deleted.'); go(VIEW);
+      } catch (err) {
+        toast('❌ ' + (err.message || 'Unable to delete event.'));
+      }
+    }
+    async function runReminders() {
+      try {
+        const rs = await api('/notifications/reminders/run', { method: 'POST' });
+        await loadMailState();
+        const msg = !rs.configured ? 'EmailJS is not configured yet. Update your .env settings first.' : `Reminder run complete: ${rs.delivered} sent, ${rs.skipped} skipped${rs.errors && rs.errors.length ? `, ${rs.errors.length} failed` : ''}.`;
+        toast(msg);
+        if (VIEW === 'dashboard') go('dashboard');
+      } catch (err) {
+        toast('❌ ' + (err.message || 'Unable to run EmailJS reminders.'));
+      }
+    }
+    function openNotify() {
+      document.getElementById('mbox').innerHTML = `<div class="mh"><h3>Send Custom Notification</h3><button class="mc" onclick="closeMod()">✕</button></div>
+  <div class="mb">
+    <div class="fg"><label class="fl">Subject *</label><input class="fi" id="nsub" placeholder="e.g. Important Update"/></div>
+    <div class="fg"><label class="fl">Message *</label><textarea class="fi" id="nmsg" rows="5" style="resize:vertical" placeholder="Enter your detailed message here..."></textarea></div>
+  </div>
+  <div class="mf"><button class="mca" onclick="closeMod()">Cancel</button><button class="mok" onclick="sendNotify()">Send to All Users</button></div>`;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    async function sendNotify() {
+      const sub = document.getElementById('nsub').value.trim();
+      const msg = document.getElementById('nmsg').value.trim();
+      if (!sub || !msg) { toast('⚠️ Subject and message required.'); return; }
+      try {
+        const rs = await api('/notifications/custom', { method: 'POST', body: JSON.stringify({ subject: sub, message: msg }) });
+        closeMod();
+        if (!rs.configured) toast('⚠️ EmailJS not configured. Please add details to .env');
+        else if (!rs.sent) toast(`❌ Failed to send: ${rs.reason || 'Unknown EmailJS error'}`);
+        else toast(`✅ Notification sent to ${rs.recipientCount} user(s).`);
+      } catch (err) {
+        toast('❌ ' + (err.message || 'Failed to send notification.'));
+      }
+    }
+    function closeMod() { document.getElementById('modal').style.display = 'none'; }
+    window.onload = async function () {
+      const u = lu(), t = lt();
+      if (!u || !t) return;
+      U = u; TK = t;
+      try { await api('/auth/me'); await Promise.all([loadEvents(), loadMailState()]); document.getElementById('auth').style.display = 'none'; document.getElementById('app').style.display = 'flex'; initApp(); }
+      catch { doLogout(); }
+    };
+  </script>
+</body>
+
+</html>
