@@ -1,7 +1,7 @@
 {
   "name": "academic",
   "version": "1.0.0",
-  "main": "backend/src/server.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node backend/src/server.js",
     "dev": "node backend/src/server.js",

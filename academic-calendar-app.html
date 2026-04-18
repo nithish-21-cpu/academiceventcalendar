@@ -1249,7 +1249,7 @@
 
     const API_CANDIDATES = [
       (location.protocol === 'http:' || location.protocol === 'https:') ? `${location.origin}/api` : null,
-      'http://localhost:3000/api'
+      'https://academiceventcalendar.onrender.com/api'
     ].filter(Boolean);
     let API_BASE = localStorage.getItem('ac_api_base') || API_CANDIDATES[0];
     let U = null, TK = null, EVS = [], MAIL_STATE = { configured: false, from: null, appBaseUrl: null, reminderCount: 0 }, VIEW = 'dashboard', CY = 2026, CM2 = 6, CF = 'all', MF = 'all', SQ = '', AM = 'login', AR = 'student';
